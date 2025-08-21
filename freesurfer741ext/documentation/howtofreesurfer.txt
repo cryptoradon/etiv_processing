@@ -1,0 +1,4 @@
+1. Move all the data to the data folder.
+2. Move all the freesurfer741 recon-all results to the results folder.
+3. Fix the filenames in runPipeline.sh and slurmJob.sh.
+4. Run config/slurm/runPipeline.sh.

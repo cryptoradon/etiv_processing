@@ -1,0 +1,6 @@
+1. Copy the whole slant folder to your home directory
+2. chmod +111 slant/config/slurm/runPipeline.sh
+3. chmod +111 slant/config/slurm/slurmJob.sh
+4. Change the names of the directories in runPipeline.sh.
+5. Check documentation/SUMMARY.md for additional steps.
+6. ./slant/config/slurm/runPipeline.sh

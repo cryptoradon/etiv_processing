@@ -1,0 +1,9 @@
+the current recommended container does not have cudnn installed so it tries to access the local verison which is too high for the tf.
+
+Tried the latest tf container it is not compatible with cudnn (known bug).
+
+Tried the required cuda container but it doesnt have python, cant change it becuase no docker.
+
+Tried a working tf container but this time the version is too high for the code.
+
+Tried a tf1.15 container. Keras became issue. Tried 2.2.4. Installed ANTS from dockerfile, there were many that needed installation. Decided to build from their own docker container and add the cuda and cudd to it. Can't build no docker access.

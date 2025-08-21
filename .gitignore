@@ -1,0 +1,7 @@
+*/data/*
+*/results/*
+*/log/*
+*/singularity/*
+*.nii*
+*.sif
+*.pth

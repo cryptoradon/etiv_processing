@@ -1,0 +1,5 @@
+1. Copy the whole grace folder to your home directory.
+2. chmod +111 grace/config/slurm/runPipeline.sh.
+3. Change the name of the directories in runPipeline.sh
+4. Check documentation/SUMMARY.md for additional steps.
+4. sbatch grace/config/slurm/runPipeline.sh

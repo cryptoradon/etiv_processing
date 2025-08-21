@@ -1,0 +1,48 @@
+Metadata-Version: 2.1
+Name: iCVMapp3r
+Version: 0.1.0
+Summary: A CNN-based segmentation technique using MRI images from BrainLab
+Home-page: https://icvmapp3r.readthedocs.io/
+Author: ['Maged Goubran', 'Hassan Akhavein', 'Edward Ntiri']
+Author-email: maged.goubran@sri.utoronto.ca
+License: GNU GENERAL PUBLIC LICENSE v3
+Download-URL: https://github.com/mgoubran/iCVMapp3r
+Description: # iCVMapp3r
+        
+        *iCVMapp3r* (pronounced icvmapper) is a CNN-based algorithm for brain extraction (skull-stripping)
+        using MRI images from BrainLab.
+        It can deal with brains with lesions and extensive atrophy and extracts the brain in seconds.
+        It can use a T1-weighted image or a combination of T1, T2 and Flair scans as input. 
+        
+        We recommend using iCVMapp3r with the Docker or Singularity containers we provide, since support for local installs has been discontinued. See our doc: [installation instructions](https://icvmapp3r.readthedocs.io/en/latest/docker.html) for more information.
+        <p align="center">
+              <img src="docs/images/icvmapper_process.png" alt="icv pop-up window"/>
+        </p>
+        
+        
+        ____________________________
+        
+        For more details, see our [docs](https://icvmapp3r.readthedocs.io).
+        
+        Copyright (C) 2019 BrainLab.
+        
+Keywords: neuroscience dementia lesion stroke white-matter-hyperintensity brain-atlas mri neuroimaging,medical-imaging biomedical image-processing image-registration image-segmentation
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Environment :: Console
+Classifier: Environment :: X11 Applications :: Qt
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU  General Public License v3 (GPLv3)
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS
+Classifier: Operating System :: Unix
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Unix Shell
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Medical Science Apps.
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
+Classifier: Topic :: Scientific/Engineering :: Image Recognition
+Provides-Extra: icvmapper
+Provides-Extra: icvmapper_gpu
