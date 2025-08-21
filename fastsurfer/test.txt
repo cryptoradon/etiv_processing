@@ -1,6 +1,0 @@
-singularity exec --nv \
-                 /home/ahmadkhana/Desktop/etiv-comparison/fastsurfer/singularity/fastsurfer-gpu.sif \
-                 /fastsurfer/run_fastsurfer.sh \
-                 --t1 "/home/ahmadkhana/Desktop/etiv-comparison/fastsurfer/data/data_retest-oasis1/OAS1_0061_MR1/OAS1_0061_MR1.nii.gz" \
-                 --sid OAS1_0061_MR1 --sd "/home/ahmadkhana/Desktop/etiv-comparison/fastsurfer/results" \
-                 --seg_only --no_biasfield --no_cereb --no_hypothal --tal_reg
