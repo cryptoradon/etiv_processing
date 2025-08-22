@@ -1,33 +1,30 @@
 #!/bin/bash
 
 ### --- CONFIGURATION ---
-BASE="/home/ahmadkhana/Desktop/etiv-processing/freesurfer741ext"
-DATASETS=("data_vinn-pruned")
+BASE="/groups/ag-reuter/projects/etiv-processing/freesurfer741ext"
+DATASET="$BASE/data/nki-rs.csv"
 SUBJECTS_PER_JOB=7
-LIST="$BASE/log/subject_list.txt"
+SUBJ_DATA="$BASE/log/subject_data.txt"
 
 JOB_SCRIPT="$BASE/config/slurm/slurmJob.sh"
 
-echo "Generating subject list at: $LIST"
-> "$LIST"
+echo "Generating subject datalist at: $SUBJ_DATA"
+> "$SUBJ_DATA"
 
-for dataset in "${DATASETS[@]}"; do
-    DATASET_DIR="$BASE/data/$dataset"
-    if [ -d "$DATASET_DIR" ]; then
-        echo "Scanning dataset: $dataset"
-        find "$DATASET_DIR" -mindepth 2 -type f -name "orig.mgz" | while read nii_file; do
-            echo "$nii_file" >> "$LIST"
-        done
-    else
-        echo "!! Dataset not found: $DATASET_DIR"
-    fi
-done
+{
+    read
+    while IFS=',' read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 rest; do
+        output="$f12"
+        echo "$output" >> "$SUBJ_DATA"
 
-NUM_SUBJECTS=$(wc -l < "$LIST")
+    done
+}  < "$DATASET"
+
+NUM_SUBJECTS=$(wc -l < "$SUBJ_DATA")
 NUM_TASKS=$(( (NUM_SUBJECTS + SUBJECTS_PER_JOB - 1) / SUBJECTS_PER_JOB ))
 
 echo "Found $NUM_SUBJECTS subjects."
 echo "Each SLURM job will process $SUBJECTS_PER_JOB subjects."
 echo "Submitting SLURM array job with: --array=0-$((NUM_TASKS - 1))"
 
-sbatch --array=0-$((NUM_TASKS - 1)) "$JOB_SCRIPT"
+# sbatch --array=0-$((NUM_TASKS - 1)) "$JOB_SCRIPT"

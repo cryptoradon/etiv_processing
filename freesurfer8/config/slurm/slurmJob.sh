@@ -7,6 +7,7 @@
 #SBATCH --time=2-23:55:00
 #SBATCH --mem=768000
 #SBATCH --partition=HPC-CPUs
+#SBATCH --job-name=freesurfer8
 
 module load singularity
 
