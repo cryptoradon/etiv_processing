@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### --- CONFIGURATION ---
-BASE="/home/ahmadkhana/Desktop/etiv-processing/charm_ext"
+BASE="/groups/ag-reuter/projects/etiv-processing/charm_ext"
 DATASETS=("data_vinn-pruned")
 SUBJECTS_PER_JOB=7
 LIST="$BASE/log/subject_list.txt"

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#SBATCH --output /home/ahmadkhana/Desktop/etiv-processing/freesurfer741ext/log/slurm_output/%A_%a.out # saves output as (jobID)_out.out 
-#SBATCH --error /home/ahmadkhana/Desktop/etiv-processing/freesurfer741ext/log/slurm_output/%A_%a.err # saves error as (jobID)_err.out 
+#SBATCH --output /groups/ag-reuter/projects/etiv-processing/freesurfer741ext/log/slurm_output/%A_%a.out # saves output as (jobID)_out.out 
+#SBATCH --error /groups/ag-reuter/projects/etiv-processing/freesurfer741ext/log/slurm_output/%A_%a.err # saves error as (jobID)_err.out 
 #SBATCH --ntasks=7
 #SBATCH --cpus-per-task 10
 #SBATCH --time=2-23:55:00
@@ -11,15 +11,15 @@
 
 module load singularity
 
-BASE="/home/ahmadkhana/Desktop/etiv-processing/freesurfer741ext"
+BASE="//groups/ag-reuter/projects/etiv-processing/freesurfer741ext"
 IMG="$BASE/singularity/diersk_freesurfer_741.sif"
-LIST="$BASE/log/subject_list.txt"
+LIST="$BASE/log/subject_data.txt"
 SUBJECTS_PER_JOB=7
 CPUS_PER_SUBJECT=10
 
 # --- Process chunk of subjects ---
 if [ ! -f "$LIST" ]; then
-    echo "Subject list not found: $LIST"
+    echo "Subject data not found: $LIST"
     exit 1
 fi
 
@@ -46,6 +46,8 @@ for subj_i in $(seq 0 $((SUBJECTS_PER_JOB - 1))); do
         echo "Running on $subj (job $subj_i)"
         singularity exec --nv -e \
         -B $OUTPUT_DIR:/mnt \
+        --bind /groups/ag-reuter/projects/datasets \
+        --bind /groups/ag-reuter/projects/etiv-processing \
         $IMG \
         /bin/bash -c "
             source /opt/fs741/SetUpFreeSurfer.sh && \

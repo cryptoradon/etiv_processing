@@ -1,7 +1,7 @@
 #!/bin/bash -x 
 
-#SBATCH --output /home/ahmadkhana/Desktop/etiv-processing/charm_ext/log/slurm_output/%A_%a.out # saves output as (jobID)_out.out 
-#SBATCH --error /home/ahmadkhana/Desktop/etiv-processing/charm_ext/log/slurm_output/%A_%a.err # saves error as (jobID)_err.out 
+#SBATCH --output /groups/ag-reuter/projects/etiv-processing/charm_ext/log/slurm_output/%A_%a.out # saves output as (jobID)_out.out 
+#SBATCH --error /groups/ag-reuter/projects/etiv-processing/charm_ext/log/slurm_output/%A_%a.err # saves error as (jobID)_err.out 
 #SBATCH --ntasks=7
 #SBATCH --cpus-per-task 10
 #SBATCH --time 2-23:55:00 # change to the time you think your job will need. There is no upper limit. 
@@ -11,7 +11,7 @@
 
 module load singularity
 
-BASE="/home/ahmadkhana/Desktop/etiv-processing/charm_ext"
+BASE="/groups/ag-reuter/projects/etiv-processing/charm_ext"
 LIST="$BASE/log/subject_list.txt"
 SUBJECTS_PER_JOB=7
 

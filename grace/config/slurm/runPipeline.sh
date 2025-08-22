@@ -26,6 +26,7 @@ do
     
     singularity exec --nv \
         --bind "$BASE:/mnt" \
+        --bind /groups/ag-reuter/projects/etiv-processing \
         "$BASE/singularity/pytorch_2.0.1-cuda11.7-cudnn8-runtime.sif" \
         python3 /mnt/software/GRACE/test.py \
         --num_gpu 2 \

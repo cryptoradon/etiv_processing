@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### --- CONFIGURATION ---
-BASE="/home/ahmadkhana/Desktop/etiv-processing/freesurfer8"
+BASE="/groups/ag-reuter/projects/etiv-processing/freesurfer8"
 DATASET="$BASE/data/vinn_pruned.csv"
 SUBJECTS_PER_JOB=7
 SUBJ_DATA="$BASE/log/subject_data.txt"

@@ -47,6 +47,7 @@ for gpu_id in $(seq 0 7); do
         echo "GPU $gpu_id running on $subj"
         CUDA_VISIBLE_DEVICES=$gpu_id \
         singularity exec -e --nv --contain \
+        --bind /groups/ag-reuter/projects/etiv-processing \
         --env CUDA_VISIBLE_DEVICES=$gpu_id \
         -B "$subj_dir":/opt/slant/matlab/input_pre \
         -B "$subj_dir":/opt/slant/matlab/input_post \

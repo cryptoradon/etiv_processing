@@ -41,6 +41,7 @@ for subj_i in $(seq 0 $(SUBJECTS_PER_JOB - 1)); do
     if [ -f "$nii_file" ]; then
         echo "Running on $subj (job $subj_i)"
         singularity exec "$IMG" icvmapper seg_icv \
+        --bind /groups/ag-reuter/projects/etiv-processing \
         --t1w "$nii_file" \
         --out "$OUTPUT_DIR/$subj/result.nii" &
     else

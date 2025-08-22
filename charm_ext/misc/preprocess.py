@@ -2,7 +2,7 @@ import os
 import re
 import subprocess
 
-data_folder = "/home/ahmadkhana/Desktop/etiv-processing/charm_ext/data/data_vinn-pruned"
+data_folder = "/groups/ag-reuter/projects/etiv-processing/charm_ext/data/data_vinn-pruned"
 
 for dirpath, _, filenames in os.walk(data_folder):
     for filename in filenames:
