@@ -1,24 +1,24 @@
 #!/bin/bash
 
-#SBATCH --output /home/ahmadkhana/Desktop/etiv-processing/fastsurfer/log/slurm_output/%A_%a.out # saves output as (jobID)_out.out 
-#SBATCH --error /home/ahmadkhana/Desktop/etiv-processing/fastsurfer/log/slurm_output/%A_%a.err # saves error as (jobID)_err.out 
+#SBATCH --output /groups/ag-reuter/projects/etiv-processing/fastsurfer223/log/slurm_output/%A_%a.out # saves output as (jobID)_out.out 
+#SBATCH --error /groups/ag-reuter/projects/etiv-processing/fastsurfer223/log/slurm_output/%A_%a.err # saves error as (jobID)_err.out 
 #SBATCH --ntasks=7
 #SBATCH --cpus-per-task 10
 #SBATCH --time=2-23:55:00
 #SBATCH --mem=768000
 #SBATCH --partition=HPC-CPUs
-#SBATCH --job-name=fastsurfer
+#SBATCH --job-name=fastsurfer223
 
 module load singularity
 
-BASE="/home/ahmadkhana/Desktop/etiv-processing/fastsurfer"
+BASE="/groups/ag-reuter/projects/etiv-processing/fastsurfer223"
 IMG="$BASE/singularity/fastsurfer-gpu.sif"
-LIST="$BASE/log/subject_list.txt"
+DATA="$BASE/log/subject_data.txt"
 SUBJECTS_PER_JOB=8
 
 # --- Process chunk of subjects ---
-if [ ! -f "$LIST" ]; then
-    echo "Subject list not found: $LIST"
+if [ ! -f "$DATA" ]; then
+    echo "Subject data not found: $DATA"
     exit 1
 fi
 
@@ -30,7 +30,7 @@ echo "Processing subjects $START_INDEX to $END_INDEX (SLURM_ARRAY_TASK_ID=$SLURM
 for subj_i in $(seq 0 $((SUBJECTS_PER_JOB - 1))); do
     subj_index=$((START_INDEX + subj_i))
 
-    nii_file=$(sed -n "$((subj_index + 1))p" "$LIST")
+    nii_file=$(echo "$line" | cut -d',' -f1 | sed 's/^"//' | sed 's/"$//')
 
     [ -z "$nii_file" ] && echo "Reached end of subject list." && continue
 

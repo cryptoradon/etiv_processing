@@ -36,7 +36,7 @@ for subj_i in $(seq 0 $((SUBJECTS_PER_JOB - 1))); do
     strength_field=$(echo "$line" | cut -d',' -f2 | sed 's/^"//' | sed 's/"$//')
     cm_field=$(echo "$line" | cut -d',' -f3 | sed 's/^"//' | sed 's/"$//')
 
-    [ -z "$nii_file" ] && echo "Reached end of subject DATA." && continue
+    [ -z "$nii_file" ] && echo "Reached end of subject list." && continue
 
     strength_flag=""
     [ "$strength_field" = "1" ] && strength_flag="-3T"
