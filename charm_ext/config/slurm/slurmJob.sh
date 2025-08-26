@@ -1,7 +1,7 @@
 #!/bin/bash -x 
 
-#SBATCH --output /home/ahmadkhana/Desktop/etiv-processing/charm_ext/log/slurm_output/%A_%a.out # saves output as (jobID)_out.out 
-#SBATCH --error /home/ahmadkhana/Desktop/etiv-processing/charm_ext/log/slurm_output/%A_%a.err # saves error as (jobID)_err.out 
+#SBATCH --output /groups/ag-reuter/projects/etiv-processing/charm_ext/log/slurm_output/%A_%a.out # saves output as (jobID)_out.out 
+#SBATCH --error /groups/ag-reuter/projects/etiv-processing/charm_ext/log/slurm_output/%A_%a.err # saves error as (jobID)_err.out 
 #SBATCH --ntasks=7
 #SBATCH --cpus-per-task 10
 #SBATCH --time 2-23:55:00 # change to the time you think your job will need. There is no upper limit. 
@@ -11,13 +11,13 @@
 
 module load singularity
 
-BASE="/home/ahmadkhana/Desktop/etiv-processing/charm_ext"
-LIST="$BASE/log/subject_list.txt"
+BASE="/groups/ag-reuter/projects/etiv-processing/charm_ext"
+DATA="$BASE/log/subject_data.txt"
 SUBJECTS_PER_JOB=7
 
 # --- Process chunk of subjects ---
-if [ ! -f "$LIST" ]; then
-    echo "Subject list not found: $LIST"
+if [ ! -f "$DATA" ]; then
+    echo "Subject data not found: $DATA"
     exit 1
 fi
 
@@ -28,21 +28,23 @@ echo "Processing subjects $START_INDEX to $END_INDEX (SLURM_ARRAY_TASK_ID=$SLURM
 
 for subj_i in $(seq 0 $((SUBJECTS_PER_JOB - 1))); do
     subj_index=$((START_INDEX + subj_i))
-    nii_file=$(sed -n "$((subj_index + 1))p" "$LIST")
+    
+    line=$(sed -n "$((subj_index + 1))p" "$DATA")
+    nii_file=$(echo "$line" | cut -d',' -f1 | sed 's/^"//' | sed 's/"$//')
 
     [ -z "$nii_file" ] && echo "Reached end of subject list." && continue
 
-    subj=$(basename "$(dirname "$(dirname "$nii_file")")")
-    subdataset=$(basename "$(dirname "$(dirname "$(dirname "$nii_file")")")")
-    dataset=$(basename "$(dirname "$(dirname "$(dirname "$(dirname "$nii_file")")")")")
+    sess=$(basename "$(dirname "$(dirname "$nii_file")")")
+    subj=$(basename "$(dirname "$(dirname "$(dirname "$nii_file")")")")
+    dataset=$(basename "$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$nii_file")")")")")")")
     results_dataset=${dataset/data_/results_}
-    OUTPUT_DIR="$BASE/results/$results_dataset/$subdataset"
+    OUTPUT_DIR="$BASE/results/$results_dataset"
 
     if [ -f "$nii_file" ]; then
-        echo "Running on $subj (job $subj_i)"
+        echo "Running on $subj $sess (job $subj_i)"
         mkdir "$OUTPUT_DIR"
         cd "$OUTPUT_DIR"
-        /home/ahmadkhana/SimNIBS-4.5/bin/charm $subj $nii_file --usesettings "$BASE/software/MRI_Custom_Settings/settings_fat.ini" --noneck --forcesform --forcerun
+        /home/ahmadkhana/SimNIBS-4.5/bin/charm "${subj}_${sess}" $nii_file --usesettings "$BASE/software/MRI_Custom_Settings/settings_fat.ini" --noneck --forcesform --forcerun &
     else
         echo "No NIfTI file found in $nii_file"
     fi

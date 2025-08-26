@@ -1,28 +1,24 @@
 #!/bin/bash
 
 ### --- CONFIGURATION ---
-BASE="/home/ahmadkhana/Desktop/etiv-processing/charm_ext"
-DATASETS=("data_vinn-pruned")
+BASE="/groups/ag-reuter/projects/etiv-processing/charm_ext"
+DATASET="$BASE/data/nki-rs.csv"
 SUBJECTS_PER_JOB=7
-LIST="$BASE/log/subject_list.txt"
+SUBJ_DATA="$BASE/log/subject_data.txt"
 JOB_SCRIPT="$BASE/config/slurm/slurmJob.sh"
 
-echo "Generating subject list at: $LIST"
-> "$LIST"
+echo "Generating subject data list at: $SUBJ_DATA"
+> "$SUBJ_DATA"
 
-for dataset in "${DATASETS[@]}"; do
-    DATASET_DIR="$BASE/data/$dataset"
-    if [ -d "$DATASET_DIR" ]; then
-        echo "Scanning dataset: $dataset"
-        find "$DATASET_DIR" -mindepth 2 -type f -name "orig.nii.gz" | while read nii_file; do
-            echo "$nii_file" >> "$LIST"
-        done
-    else
-        echo "!! Dataset not found: $DATASET_DIR"
-    fi
-done
+{
+    read
+    while IFS=',' read -r f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23 f24 f25 f26 f27 f28 f29 rest; do
+        output="$f12"
+        echo "$output" >> "$SUBJ_DATA"
+    done
+}  < "$DATASET"
 
-NUM_SUBJECTS=$(wc -l < "$LIST")
+NUM_SUBJECTS=$(wc -l < "$SUBJ_DATA")
 NUM_TASKS=$(( (NUM_SUBJECTS + SUBJECTS_PER_JOB - 1) / SUBJECTS_PER_JOB ))
 
 echo "Found $NUM_SUBJECTS subjects."
