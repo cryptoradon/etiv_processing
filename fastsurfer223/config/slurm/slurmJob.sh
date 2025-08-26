@@ -14,7 +14,7 @@ module load singularity
 BASE="/groups/ag-reuter/projects/etiv-processing/fastsurfer223"
 IMG="$BASE/singularity/fastsurfer-gpu.sif"
 DATA="$BASE/log/subject_data.txt"
-SUBJECTS_PER_JOB=8
+SUBJECTS_PER_JOB=7
 
 # --- Process chunk of subjects ---
 if [ ! -f "$DATA" ]; then
@@ -30,24 +30,27 @@ echo "Processing subjects $START_INDEX to $END_INDEX (SLURM_ARRAY_TASK_ID=$SLURM
 for subj_i in $(seq 0 $((SUBJECTS_PER_JOB - 1))); do
     subj_index=$((START_INDEX + subj_i))
 
+    line=$(sed -n "$((subj_index + 1))p" "$DATA")
     nii_file=$(echo "$line" | cut -d',' -f1 | sed 's/^"//' | sed 's/"$//')
 
     [ -z "$nii_file" ] && echo "Reached end of subject list." && continue
 
-    subj=$(basename "$(dirname "$(dirname "$nii_file")")")
-    sub_dataset=$(basename "$(dirname "$(dirname "$(dirname "$nii_file")")")")
-    dataset=$(basename "$(dirname "$(dirname "$(dirname "$(dirname "$nii_file")")")")")
+    sess=$(basename "$(dirname "$(dirname "$nii_file")")")
+    subj=$(basename "$(dirname "$(dirname "$(dirname "$nii_file")")")")
+    dataset=$(basename "$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$(dirname "$nii_file")")")")")")")
     results_dataset=${dataset/data_/results_}
-    OUTPUT_DIR="$BASE/results/$results_dataset/$sub_dataset"
+    OUTPUT_DIR="$BASE/results/$results_dataset"
 
     if [ -f "$nii_file" ]; then
         echo "Running on $subj (job $subj_i)" 
         singularity exec --nv \
+        --bind /groups/ag-reuter/projects/datasets \
+        --bind /groups/ag-reuter/projects/etiv-processing \
             $IMG \
             /bin/bash -c "
                 /fastsurfer/run_fastsurfer.sh \
                     --t1 \"$nii_file\" \
-                    --sid $subj \
+                    --sid \"${subj}_${sess}\" \
                     --sd \"$OUTPUT_DIR\" \
                     --seg_only --no_biasfield --no_cereb --no_hypothal --tal_reg
             " &

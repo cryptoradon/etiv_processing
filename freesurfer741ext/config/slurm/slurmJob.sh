@@ -31,6 +31,7 @@ echo "Processing subjects $START_INDEX to $END_INDEX (SLURM_ARRAY_TASK_ID=$SLURM
 for subj_i in $(seq 0 $((SUBJECTS_PER_JOB - 1))); do
     subj_index=$((START_INDEX + subj_i))
 
+    line=$(sed -n "$((subj_index + 1))p" "$DATA")
     nii_file=$(echo "$line" | cut -d',' -f1 | sed 's/^"//' | sed 's/"$//')
     
     [ -z "$nii_file" ] && echo "Reached end of subject list." && continue
@@ -42,26 +43,33 @@ for subj_i in $(seq 0 $((SUBJECTS_PER_JOB - 1))); do
     OUTPUT_DIR="$BASE/results/$results_dataset"
     echo "Running on output dir $OUTPUT_DIR"
 
-    mkdir -p "$OUTPUT_DIR/"
-
     if [ -f "$nii_file" ]; then
         echo "Running on $subj $sess (job $subj_i)"
-        subj=\"${subj}_${sess}\"
-        singularity exec --nv -e \
-        --bind /groups/ag-reuter/projects/datasets \
-        --bind /groups/ag-reuter/projects/etiv-processing \
-        -B $OUTPUT_DIR:/mnt \
-        $IMG \
-        /bin/bash -c "
-            source /opt/fs741/SetUpFreeSurfer.sh && \
-            export SUBJECTS_DIR=/mnt && \
-            segmentHA_T1.sh $subj \
-            segment_subregions thalamus --cross $subj && \
-            mri_sclimbic_seg \
-                --i \"$nii_file\" \
-                --o \"/mnt/$subj/$subj.sclimbic.mgz\" \
-                --conform
-        " &
+        subj=${subj}_${sess}
+        export SUBJECTS_DIR=$OUTPUT_DIR
+        export FREESURFER_HOME=/groups/ag-reuter/software-centos/fs741
+        source $FREESURFER_HOME/SetUpFreeSurfer.sh
+        segmentHA_T1.sh "$subj" &
+        segment_subregions thalamus --cross "$subj" &
+        mri_sclimbic_seg \
+            --i "$nii_file" \
+            --o "$SUBJECTS_DIR/$subj/${subj}.sclimbic.mgz" \
+            --conform &
+        # singularity exec --nv -e \
+        # --bind /groups/ag-reuter/projects/datasets \
+        # --bind /groups/ag-reuter/projects/etiv-processing \
+        # -B $OUTPUT_DIR:/mnt \
+        # $IMG \
+        # /bin/bash -c "
+        #     source /opt/fs741/SetUpFreeSurfer.sh && \
+        #     export SUBJECTS_DIR=/mnt && \
+        #     segmentHA_T1.sh $subj \
+        #     segment_subregions thalamus --cross $subj && \
+        #     mri_sclimbic_seg \
+        #         --i \"$nii_file\" \
+        #         --o \"/mnt/$subj/$subj.sclimbic.mgz\" \
+        #         --conform
+        # " &
     else
         echo "No NIfTI file found at $nii_file"
     fi

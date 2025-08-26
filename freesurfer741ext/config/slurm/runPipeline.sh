@@ -27,4 +27,4 @@ echo "Found $NUM_SUBJECTS subjects."
 echo "Each SLURM job will process $SUBJECTS_PER_JOB subjects."
 echo "Submitting SLURM array job with: --array=0-$((NUM_TASKS - 1))"
 
-# sbatch --array=0-$((NUM_TASKS - 1)) "$JOB_SCRIPT"
+sbatch --array=0-$((NUM_TASKS - 1)) "$JOB_SCRIPT"
